@@ -1,0 +1,9 @@
+.vscode/
+.codelite/
+*.iml
+cmake-build-Debug/
+cmake-build-Release/
+gradlew*
+local.properties
+build/
+*.zip
