@@ -543,4 +543,4 @@ inline int Reciprocal(const UINT_T* a, UINT_T* A)
 //}
 
 }  // namespace MultBase
-#endif  // Karatsuba_H
+#endif  // MultBase_H

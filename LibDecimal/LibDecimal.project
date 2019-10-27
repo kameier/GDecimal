@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="Decimal" Version="10.0.0" InternalType="Library">
+<CodeLite_Project Name="Decimal" Version="11000" InternalType="Library">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0007Release000000000000]]>
@@ -30,7 +30,7 @@
       <Compiler Options="-std=c++17;-Wall" C_Options="" Assembler="">
         <IncludePath Value="."/>
       </Compiler>
-      <Linker Options="-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive">
+      <Linker Options="">
         <LibraryPath Value="."/>
       </Linker>
       <ResourceCompiler Options=""/>

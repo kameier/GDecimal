@@ -9,12 +9,12 @@ project(DecimalTest)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # Set default locations
-set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../cmake-build-Debug/output)
+set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../cmake-build-Release/output)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
-set(CONFIGURATION_NAME "Debug")
+set(CONFIGURATION_NAME "Release")
 
 # Projects
 
@@ -28,12 +28,10 @@ set(WORKSPACE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 #{{{{ User Code 1
 # Place your code here
-include_directories(
-    C:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/thirdparty/include
-)
 link_directories(
     ${CL_OUTPUT_DIRECTORY}
 )
+set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 #}}}}
 
 include_directories(
@@ -46,11 +44,13 @@ include_directories(
 # Compiler options
 add_definitions(-std=c++17)
 add_definitions(-Wall)
-add_definitions(-g)
-add_definitions(-O0)
+add_definitions(-O2)
+add_definitions(
+    -DNDEBUG
+)
+
 
 # Linker options
-set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 
 
 if(WIN32)
@@ -60,19 +60,18 @@ endif(WIN32)
 # Library path
 link_directories(
     .
-    C:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/thirdparty/lib
 )
 
 # Define the CXX sources
 set ( CXX_SRCS
-    ${CMAKE_CURRENT_LIST_DIR}/GDecimaltest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Power_test.cpp
     ${CMAKE_CURRENT_LIST_DIR}/IO_test.cpp
 )
 
 set_source_files_properties(
     ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
-    " -std=c++17 -Wall -g -O0 -Wall")
+    " -std=c++17 -Wall -O2 -Wall")
 
 if(WIN32)
     enable_language(RC)
@@ -89,13 +88,12 @@ endif(WIN32)
 add_executable(DecimalTest ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
 target_link_libraries(DecimalTest ${LINK_OPTIONS})
 
-target_link_libraries(DecimalTest
-    libDecimal.a
-)
-
 
 
 #{{{{ User Code 3
 # Place your code here
+target_link_libraries(DecimalTest
+    libDecimal.a
+)
 #}}}}
 

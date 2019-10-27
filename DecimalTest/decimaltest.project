@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="DecimalTest" Version="10.0.0" InternalType="Console">
+<CodeLite_Project Name="DecimalTest" Version="11000" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0007Release000000000000]]>
@@ -8,9 +8,9 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <File Name="main.cpp"/>
     <File Name="Power_test.cpp"/>
     <File Name="IO_test.cpp"/>
-    <File Name="GDecimaltest.cpp"/>
     <File Name="DecimalMathTest.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
@@ -18,9 +18,8 @@
       <Compiler Options="-std=c++17;-Wall" C_Options="" Assembler="">
         <IncludePath Value="."/>
       </Compiler>
-      <Linker Options="-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive">
+      <Linker Options="">
         <LibraryPath Value="."/>
-        <Library Value="libDecimal.a"/>
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>

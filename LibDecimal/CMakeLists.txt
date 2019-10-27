@@ -9,12 +9,12 @@ project(Decimal)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # Set default locations
-set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../cmake-build-Debug/output)
+set(CL_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../cmake-build-Release/output)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CL_OUTPUT_DIRECTORY})
 
-set(CONFIGURATION_NAME "Debug")
+set(CONFIGURATION_NAME "Release")
 
 # Projects
 
@@ -28,6 +28,7 @@ set(WORKSPACE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 #{{{{ User Code 1
 # Place your code here
+set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 #}}}}
 
 include_directories(
@@ -40,10 +41,8 @@ include_directories(
 # Compiler options
 add_definitions(-std=c++17)
 add_definitions(-Wall)
-add_definitions(-g)
 
 # Linker options
-set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 
 
 if(WIN32)
@@ -53,7 +52,6 @@ endif(WIN32)
 # Library path
 link_directories(
     .
-    C:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/thirdparty/lib
 )
 
 # Define the CXX sources
@@ -63,7 +61,7 @@ set ( CXX_SRCS
 
 set_source_files_properties(
     ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
-    " -std=c++17 -Wall -g")
+    " -std=c++17 -Wall")
 
 if(WIN32)
     enable_language(RC)
