@@ -8,7 +8,7 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="src/Gdecimal.cpp"/>
+    <File Name="Gdecimal.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/pch.h"/>

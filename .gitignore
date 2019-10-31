@@ -7,3 +7,5 @@ gradlew*
 local.properties
 build/
 *.zip
+*/compile_flags.txt
+compile_commands.json

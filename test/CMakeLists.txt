@@ -63,7 +63,7 @@ link_directories(
 
 # Define the CXX sources
 set ( CXX_SRCS
-    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/test.cpp
 )
 
 set_source_files_properties(

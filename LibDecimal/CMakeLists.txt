@@ -39,6 +39,7 @@ include_directories(
 
 
 # Compiler options
+add_definitions(-std=c++17)
 
 # Linker options
 
@@ -54,8 +55,12 @@ link_directories(
 
 # Define the CXX sources
 set ( CXX_SRCS
-    ${CMAKE_CURRENT_LIST_DIR}/src/Gdecimal.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Gdecimal.cpp
 )
+
+set_source_files_properties(
+    ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
+    " -std=c++17")
 
 if(WIN32)
     enable_language(RC)
@@ -70,7 +75,7 @@ endif(WIN32)
 add_definitions(-std=c++17)
 #}}}}
 
-add_library(Decimal ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
+add_library(libDecimal ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
 
 
 
