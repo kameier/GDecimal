@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 # Project name
-project(libDecimal)
+project(benchmark)
 
 # This setting is useful for providing JSON file used by CodeLite for code completion
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
@@ -21,13 +21,16 @@ set(CONFIGURATION_NAME "Release")
 
 # Top project
 # Define some variables
-set(PROJECT_libDecimal_PATH "${CMAKE_CURRENT_LIST_DIR}")
+set(PROJECT_benchmark_PATH "${CMAKE_CURRENT_LIST_DIR}")
 set(WORKSPACE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 
 
 #{{{{ User Code 1
 # Place your code here
+link_directories(
+    ${CL_OUTPUT_DIRECTORY}
+)
 set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 #}}}}
 
@@ -39,6 +42,13 @@ include_directories(
 
 
 # Compiler options
+add_definitions(-std=c++17)
+add_definitions(-O2)
+add_definitions(-Wall)
+add_definitions(
+    -DNDEBUG
+)
+
 
 # Linker options
 
@@ -54,8 +64,12 @@ link_directories(
 
 # Define the CXX sources
 set ( CXX_SRCS
-    ${CMAKE_CURRENT_LIST_DIR}/src/Gdecimal.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
+
+set_source_files_properties(
+    ${CXX_SRCS} PROPERTIES COMPILE_FLAGS 
+    " -std=c++17 -O2 -Wall")
 
 if(WIN32)
     enable_language(RC)
@@ -67,14 +81,15 @@ endif(WIN32)
 
 #{{{{ User Code 2
 # Place your code here
-add_definitions(-std=c++17)
 #}}}}
 
-add_library(Decimal ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
+add_executable(benchmark ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
+target_link_libraries(benchmark ${LINK_OPTIONS})
 
 
 
 #{{{{ User Code 3
 # Place your code here
+target_link_libraries(benchmark libDecimal.a)
 #}}}}
 

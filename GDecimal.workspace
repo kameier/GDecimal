@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="GDecimal" Database="" Version="10.0.0">
-  <Project Name="Decimal" Path="LibDecimal/LibDecimal.project" Active="No"/>
-  <Project Name="DecimalTest" Path="DecimalTest/DecimalTest.project" Active="Yes"/>
+  <Project Name="test" Path="test/test.project" Active="Yes"/>
+  <Project Name="libDecimal" Path="libDecimal/libDecimal.project" Active="No"/>
+  <Project Name="benchmark" Path="benchmark/benchmark.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Environment/>
-      <Project Name="Decimal" ConfigName="Debug"/>
-      <Project Name="DecimalTest" ConfigName="Debug"/>
+      <Project Name="test" ConfigName="Debug"/>
+      <Project Name="libDecimal" ConfigName="Debug"/>
+      <Project Name="benchmark" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Environment/>
-      <Project Name="Decimal" ConfigName="Release"/>
-      <Project Name="DecimalTest" ConfigName="Release"/>
+      <Project Name="test" ConfigName="Release"/>
+      <Project Name="libDecimal" ConfigName="Release"/>
+      <Project Name="benchmark" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

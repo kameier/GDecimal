@@ -12,8 +12,7 @@
  * 因为零位大，采用大端表示
  */
 
-template <typename UINT_T, size_t MAX_LEN>
-struct Decimal {
+template <typename UINT_T, size_t MAX_LEN> struct Decimal {
     //    friend class CTX_MAP<Decimal>;
     //    friend class CTX_VECTOR<Decimal>;
     //    typedef CTX_VECTOR<Decimal> CTX;
@@ -21,18 +20,43 @@ struct Decimal {
     static_assert(std::is_integral<UINT_T>::value != 0, "UINT_T Must be integral type");
     static_assert(MAX_LEN > 1, "MAX_LEN Must > 1");
 
-   public:
+public:
     typedef UINT_T UINT;
-    explicit Decimal() : mData(MAX_LEN), mIndex(0), mSgn(0){};
-    Decimal(const Decimal& a) : mData(a.mData), mIndex(a.mIndex), mSgn(a.mSgn) {}
-    explicit Decimal(const FixPointData<UINT_T, MAX_LEN>& Adata) : mData(Adata), mIndex(0), mSgn(0) {}
-    explicit Decimal(const char* nstr) : mData(MAX_LEN), mIndex(0), mSgn(0) { this->FormString(nstr); }
-    explicit Decimal(const UINT_T num) : mData(MAX_LEN), mIndex(0), mSgn(0)
+    explicit Decimal()
+        : mData(MAX_LEN)
+        , mIndex(0)
+        , mSgn(0){};
+    Decimal(const Decimal& a)
+        : mData(a.mData)
+        , mIndex(a.mIndex)
+        , mSgn(a.mSgn)
+    {
+    }
+    explicit Decimal(const FixPointData<UINT_T, MAX_LEN>& Adata)
+        : mData(Adata)
+        , mIndex(0)
+        , mSgn(0)
+    {
+    }
+    explicit Decimal(const char* nstr)
+        : mData(MAX_LEN)
+        , mIndex(0)
+        , mSgn(0)
+    {
+        this->FormString(nstr);
+    }
+    explicit Decimal(const UINT_T num)
+        : mData(MAX_LEN)
+        , mIndex(0)
+        , mSgn(0)
     {
         mData[0] = num;
         this->Format();
     }
-    explicit Decimal(const int num) : mData(MAX_LEN), mIndex(0), mSgn(0)
+    explicit Decimal(const int num)
+        : mData(MAX_LEN)
+        , mIndex(0)
+        , mSgn(0)
     {
         if constexpr(sizeof(UINT_T) < sizeof(int)) {
             //        if((std::abs(num) >> UINT_BIT_SIZE) != 0) { DEBUG_COUT(num); }
@@ -40,7 +64,9 @@ struct Decimal {
         }
         mData[0] = std::abs(num);
         this->Format();
-        if(num < 0) { this->mSgn = 1; }
+        if(num < 0) {
+            this->mSgn = 1;
+        }
     }
 
     Decimal& operator=(const Decimal& a)
@@ -55,15 +81,17 @@ struct Decimal {
 
     inline Decimal operator+(const Decimal& b) const
     {
-        if(this->mSgn == b.mSgn) { return _add(*this, b); }
-        else {
+        if(this->mSgn == b.mSgn) {
+            return _add(*this, b);
+        } else {
             return _minus(*this, b);
         }
     }
     inline Decimal& operator+=(const Decimal& b)
     {
-        if(this->mSgn == b.mSgn) { _add_eq(*this, b); }
-        else {
+        if(this->mSgn == b.mSgn) {
+            _add_eq(*this, b);
+        } else {
             _minus_eq(*this, b);
         }
         return *this;
@@ -71,15 +99,17 @@ struct Decimal {
 
     inline Decimal operator-(const Decimal& b) const
     {
-        if(this->mSgn != b.mSgn) { return _add(*this, b); }
-        else {
+        if(this->mSgn != b.mSgn) {
+            return _add(*this, b);
+        } else {
             return _minus(*this, b);
         }
     }
     inline Decimal& operator-=(const Decimal& b)
     {
-        if(this->mSgn != b.mSgn) { _add_eq(*this, b); }
-        else {
+        if(this->mSgn != b.mSgn) {
+            _add_eq(*this, b);
+        } else {
             _minus_eq(*this, b);
         }
         return *this;
@@ -122,7 +152,9 @@ struct Decimal {
         }
 
         *this *= (UINT_T)n;
-        if(num < 0) { this->mSgn = (this->mSgn) ? 0 : 1; }
+        if(num < 0) {
+            this->mSgn = (this->mSgn) ? 0 : 1;
+        }
         return *this;
     }
 
@@ -144,8 +176,7 @@ struct Decimal {
         if((n & (n - 1)) == 0) {
             this->mIndex = this->mIndex + (int)(nzcnt_base(n) - 1);
             return *this;
-        }
-        else {
+        } else {
             FixPointOperator::multi_eq<UINT_T, MAX_LEN>(this->mData, n);
             this->Format();
             return *this;
@@ -154,7 +185,9 @@ struct Decimal {
 
     inline Decimal ToReciprocal() const
     {
-        if(this->mData[0] == 0) { return Decimal(0); }
+        if(this->mData[0] == 0) {
+            return Decimal(0);
+        }
         Decimal B = Decimal();
         //        FixPointOperator::FloatPointReciprocal<UINT_T, MAX_LEN>(this->mData, B.mData);
         //        FixPointOperator::Base_Reciprocal<UINT_T, MAX_LEN>(this->mData, B.mData);
@@ -177,13 +210,19 @@ struct Decimal {
         return B;
     }
 
-    inline Decimal operator/(const Decimal& b) const { return (*this) * b.ToReciprocal(); }
+    inline Decimal operator/(const Decimal& b) const
+    {
+        return (*this) * b.ToReciprocal();
+    }
     inline Decimal& operator/=(const Decimal& b)
     {
         (*this) *= b.ToReciprocal();
         return *this;
     }
-    inline Decimal operator/(UINT_T num) const { return Decimal(*this) /= num; }
+    inline Decimal operator/(UINT_T num) const
+    {
+        return Decimal(*this) /= num;
+    }
 
     inline Decimal& operator/=(UINT_T num)
     {
@@ -192,19 +231,15 @@ struct Decimal {
             memset(this->mData.data(), 0xFF, MAX_LEN * sizeof(UINT_T));
             this->mIndex = 0;
             return *this;
-        }
-        else if(num == 1) {
+        } else if(num == 1) {
             return *this;
-        }
-        else if(num == 2) {
+        } else if(num == 2) {
             this->mIndex = this->mIndex - 1;
             return *this;
-        }
-        else if((num & (num - 1)) == 0) {
+        } else if((num & (num - 1)) == 0) {
             this->mIndex = this->mIndex - (int)(nzcnt_base(num) - 1);
             return *this;
-        }
-        else {
+        } else {
             FixPointOperator::shift_divide_eq<UINT_T, MAX_LEN>(this->mData, num);
             this->mIndex = this->mIndex - UINT_BIT_SIZE;
             this->Format();
@@ -221,7 +256,9 @@ struct Decimal {
         }
 
         *this /= (UINT_T)n;
-        if(num < 0) { this->mSgn = (this->mSgn) ? 0 : 1; }
+        if(num < 0) {
+            this->mSgn = (this->mSgn) ? 0 : 1;
+        }
         return *this;
     }
 
@@ -247,20 +284,20 @@ struct Decimal {
         os << d.ToString(50);
         return os;
     }
-    
+
     FixPointData<UINT_T, MAX_LEN> IntegerPart() const
     {
-        if(this->mIndex < 0) { return FixPointData<UINT_T, MAX_LEN>(MAX_LEN); }
-        else {
+        if(this->mIndex < 0) {
+            return FixPointData<UINT_T, MAX_LEN>(MAX_LEN);
+        } else {
             int rs = SF_BIT_SIZE - this->mIndex - 1;
             if(rs >= 0) {
                 FixPointData<UINT_T, MAX_LEN> A = FixPointData<UINT_T, MAX_LEN>(this->mData);
                 FixPointOperator::right_shift<UINT_T, MAX_LEN>(A, rs);
                 return A;
-            }
-            else {
+            } else {
                 printf_s("\n  In File:%s, Function: %s(), Line: %d \n Number is too great!\n\n", __FILE__, __FUNCTION__,
-                         __LINE__);
+                    __LINE__);
                 return FixPointData<UINT_T, MAX_LEN>(MAX_LEN);
             }
         }
@@ -284,38 +321,74 @@ struct Decimal {
     }
     inline void println(const char* str = nullptr, int numcount = 0) const
     {
-        if(str != nullptr) { std::cout << str; }
-        if(numcount <= 0) { std::cout << this->ToString() << std::endl; }
-        else {
+        if(str != nullptr) {
+            std::cout << str;
+        }
+        if(numcount <= 0) {
+            std::cout << this->ToString() << std::endl;
+        } else {
             std::cout << this->ToString(numcount) << std::endl;
         }
     }
-    inline void TEST_ToString(const char* str = nullptr, int numcount = 0)
+    inline Decimal TEST_ToString(const char* str = nullptr, int numcount = 0)
     {
         Decimal Err = Decimal(ToString().c_str()) - (*this);
         Err.mSgn = 0;
         //        DEBUG_COUT(Err.mIndex);
         //        Err.floor().println("a floor:", 20);
         //        Err.GetFraction().println("a floor:", 20);
-        if(str != nullptr) { std::cout << "String input and output error of " << str << " : "; }
-        else {
+        if(str != nullptr) {
+            std::cout << "String input and output error of " << str << " : ";
+        } else {
             printf("String input and output error: ");
         }
-        if(numcount <= 0) { std::cout << Err.ToString() << std::endl; }
-        else {
+        if(numcount <= 0) {
+            std::cout << Err.ToString() << std::endl;
+        } else {
             std::cout << Err.ToString(numcount) << std::endl;
         }
+        return Err;
     }
-    inline bool isPositive() const { return this->mSgn == 0; }
-    inline bool isZero() const { return FixPointOperator::iszero<UINT_T, MAX_LEN>(mData); }
-    inline bool isNegative() const { return this->mSgn != 0; }
-    inline void SetPositive() { this->mSgn = 0; }
-    inline void SetNegative() { this->mSgn = 1; }
-    inline void ChangeSgn() { this->mSgn = (mSgn) ? 0 : 1; }
-    inline int GetIndex() const { return this->mIndex; }
-    inline int AddIndex(int m) { return (this->mIndex += m); }
-    inline void SetIndex(int idx) { mIndex = idx; }
-    inline bool eps(int index = 1) const { return (mIndex + Decimal::SF_BIT_SIZE < index || mData[0] == 0); }
+    inline bool isPositive() const
+    {
+        return this->mSgn == 0;
+    }
+    inline bool isZero() const
+    {
+        return FixPointOperator::iszero<UINT_T, MAX_LEN>(mData);
+    }
+    inline bool isNegative() const
+    {
+        return this->mSgn != 0;
+    }
+    inline void SetPositive()
+    {
+        this->mSgn = 0;
+    }
+    inline void SetNegative()
+    {
+        this->mSgn = 1;
+    }
+    inline void ChangeSgn()
+    {
+        this->mSgn = (mSgn) ? 0 : 1;
+    }
+    inline int GetIndex() const
+    {
+        return this->mIndex;
+    }
+    inline int AddIndex(int m)
+    {
+        return (this->mIndex += m);
+    }
+    inline void SetIndex(int idx)
+    {
+        mIndex = idx;
+    }
+    inline bool eps(int index = 1) const
+    {
+        return (mIndex + Decimal::SF_BIT_SIZE < index || mData[0] == 0);
+    }
 
     constexpr static inline int UINT_BIT_SIZE = (8 * sizeof(UINT_T));
 
@@ -323,7 +396,7 @@ struct Decimal {
     constexpr static inline int SF_BIT_SIZE = Decimal::Data_BIT_SIZE - UINT_BIT_SIZE + 1;
     constexpr static inline UINT_T UINT_T_MAX = ~((UINT_T)0);
 
-   protected:
+protected:
     FixPointData<UINT_T, MAX_LEN> mData;
     int mIndex;
     int mSgn;
@@ -347,8 +420,7 @@ struct Decimal {
     static void _minus_eq(Decimal& a, const Decimal& b);
 };
 
-template <typename UINT_T, size_t MAX_LEN>
-void Decimal<UINT_T, MAX_LEN>::setNumber(UINT_T n)
+template <typename UINT_T, size_t MAX_LEN> void Decimal<UINT_T, MAX_LEN>::setNumber(UINT_T n)
 {
     mData[0] = n;
     for(size_t i = 1; i < MAX_LEN; ++i) {
@@ -435,18 +507,17 @@ void Decimal<UINT_T, MAX_LEN>::setNumber(UINT_T n)
 //    return;
 //}
 
-template <typename UINT_T, size_t MAX_LEN>
-int Decimal<UINT_T, MAX_LEN>::Format()
+template <typename UINT_T, size_t MAX_LEN> int Decimal<UINT_T, MAX_LEN>::Format()
 {
-    if(mData[0] == 1) { return 0; }
-    else if(mData[0] > 1) {
+    if(mData[0] == 1) {
+        return 0;
+    } else if(mData[0] > 1) {
         int index = nzcnt_base(mData[0]) - 1;
         FixPointOperator::right_shift<UINT_T, MAX_LEN>(mData, index);
         this->mIndex += index;
         //        if (mData[0] != 1) DEBUG_COUT(mData[0]);
         return this->mIndex;
-    }
-    else {
+    } else {
         size_t j = 0;
         for(size_t i = 1; i < MAX_LEN; ++i) {
             if(this->mData[i] != 0) {
@@ -458,8 +529,7 @@ int Decimal<UINT_T, MAX_LEN>::Format()
             // iszero
             this->mIndex = 0;
             return 0;
-        }
-        else {
+        } else {
             int ls = (j - 1) * UINT_BIT_SIZE + lzcnt_base(mData[j]) + 1;
             FixPointOperator::left_shift<UINT_T, MAX_LEN>(mData, ls);
             //        if (mData[0] != 1) DEBUG_COUT(index);
@@ -476,13 +546,17 @@ int Decimal<UINT_T, MAX_LEN>::Format()
  */
 template <typename UINT_T, size_t MAX_LEN>
 Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::_add(const Decimal<UINT_T, MAX_LEN>& a,
-                                                        const Decimal<UINT_T, MAX_LEN>& b)
+    const Decimal<UINT_T, MAX_LEN>& b)
 {
     FixPointData<UINT_T, MAX_LEN> Adata = FixPointData<UINT_T, MAX_LEN>(a.mData);
     FixPointData<UINT_T, MAX_LEN> Bdata = FixPointData<UINT_T, MAX_LEN>(b.mData);
 
-    if(a.mIndex < b.mIndex) { FixPointOperator::right_shift<UINT_T, MAX_LEN>(Adata, b.mIndex - a.mIndex); }
-    if(a.mIndex > b.mIndex) { FixPointOperator::right_shift<UINT_T, MAX_LEN>(Bdata, a.mIndex - b.mIndex); }
+    if(a.mIndex < b.mIndex) {
+        FixPointOperator::right_shift<UINT_T, MAX_LEN>(Adata, b.mIndex - a.mIndex);
+    }
+    if(a.mIndex > b.mIndex) {
+        FixPointOperator::right_shift<UINT_T, MAX_LEN>(Bdata, a.mIndex - b.mIndex);
+    }
 
     FixPointOperator::add_eq<UINT_T, MAX_LEN>(Adata, Bdata);
 
@@ -509,7 +583,9 @@ void Decimal<UINT_T, MAX_LEN>::_add_eq(Decimal<UINT_T, MAX_LEN>& a, const Decima
         a.Format();
         return;
     }
-    if(a.mIndex < b.mIndex) { FixPointOperator::right_shift<UINT_T, MAX_LEN>(a.mData, b.mIndex - a.mIndex); }
+    if(a.mIndex < b.mIndex) {
+        FixPointOperator::right_shift<UINT_T, MAX_LEN>(a.mData, b.mIndex - a.mIndex);
+    }
     FixPointOperator::add_eq<UINT_T, MAX_LEN>(a.mData, b.mData);
     a.mIndex = b.mIndex;
     a.Format();
@@ -523,18 +599,23 @@ void Decimal<UINT_T, MAX_LEN>::_add_eq(Decimal<UINT_T, MAX_LEN>& a, const Decima
  */
 template <typename UINT_T, size_t MAX_LEN>
 Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::_minus(const Decimal<UINT_T, MAX_LEN>& a,
-                                                          const Decimal<UINT_T, MAX_LEN>& b)
+    const Decimal<UINT_T, MAX_LEN>& b)
 {
     //        assert(a.mSgn == b.mSgn);
     Decimal<UINT_T, MAX_LEN> C;
     FixPointData<UINT_T, MAX_LEN> Adata = FixPointData<UINT_T, MAX_LEN>(a.mData);
     FixPointData<UINT_T, MAX_LEN> Bdata = FixPointData<UINT_T, MAX_LEN>(b.mData);
-    if(a.mIndex > b.mIndex) { FixPointOperator::right_shift<UINT_T, MAX_LEN>(Bdata, a.mIndex - b.mIndex); }
-    if(a.mIndex < b.mIndex) { FixPointOperator::right_shift<UINT_T, MAX_LEN>(Adata, b.mIndex - a.mIndex); }
+    if(a.mIndex > b.mIndex) {
+        FixPointOperator::right_shift<UINT_T, MAX_LEN>(Bdata, a.mIndex - b.mIndex);
+    }
+    if(a.mIndex < b.mIndex) {
+        FixPointOperator::right_shift<UINT_T, MAX_LEN>(Adata, b.mIndex - a.mIndex);
+    }
 
     int t1 = FixPointOperator::minus<UINT_T, MAX_LEN>(Adata, Bdata, C.mData);
-    if(t1 == 1) { C.mSgn = (a.mSgn == 0); }
-    else {
+    if(t1 == 1) {
+        C.mSgn = (a.mSgn == 0);
+    } else {
         C.mSgn = a.mSgn;
     }
 
@@ -558,17 +639,18 @@ void Decimal<UINT_T, MAX_LEN>::_minus_eq(Decimal<UINT_T, MAX_LEN>& a, const Deci
         FixPointOperator::minus_eq<UINT_T, MAX_LEN>(a.mData, Bdata);
         a.Format();
         return;
-    }
-    else {
+    } else {
         if(a.mIndex < b.mIndex) {
             FixPointOperator::right_shift<UINT_T, MAX_LEN>(a.mData, b.mIndex - a.mIndex);
             a.mIndex = b.mIndex;
         }
         int t1 = FixPointOperator::minus_eq<UINT_T, MAX_LEN>(a.mData, b.mData);
-        if(t1 == 1) { a.mSgn = (a.mSgn == 0); }
+        if(t1 == 1) {
+            a.mSgn = (a.mSgn == 0);
+        }
         a.Format();
         return;
     }
 }
 
-#endif  // Decimal_H
+#endif // Decimal_H

@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 # Project name
-project(DecimalTest)
+project(test)
 
 # This setting is useful for providing JSON file used by CodeLite for code completion
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
@@ -21,17 +21,16 @@ set(CONFIGURATION_NAME "Release")
 
 # Top project
 # Define some variables
-set(PROJECT_DecimalTest_PATH "${CMAKE_CURRENT_LIST_DIR}")
+set(PROJECT_test_PATH "${CMAKE_CURRENT_LIST_DIR}")
 set(WORKSPACE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 
 
 #{{{{ User Code 1
 # Place your code here
-link_directories(
-    ${CL_OUTPUT_DIRECTORY}
+include_directories(
+    D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest/include
 )
-set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 #}}}}
 
 include_directories(
@@ -65,8 +64,6 @@ link_directories(
 # Define the CXX sources
 set ( CXX_SRCS
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Power_test.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/IO_test.cpp
 )
 
 set_source_files_properties(
@@ -83,17 +80,19 @@ endif(WIN32)
 
 #{{{{ User Code 2
 # Place your code here
+link_directories(
+    D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest/lib
+)
+set(LINK_OPTIONS -static gtest_main gtest)
+
 #}}}}
 
-add_executable(DecimalTest ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
-target_link_libraries(DecimalTest ${LINK_OPTIONS})
+add_executable(test ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
+target_link_libraries(test ${LINK_OPTIONS})
 
 
 
 #{{{{ User Code 3
 # Place your code here
-target_link_libraries(DecimalTest
-    libDecimal.a
-)
 #}}}}
 

@@ -5,53 +5,6 @@
 
 namespace DecimalTest
 {
-void e_calc()
-{
-    decimal E = DecimalMath::E();
-    E.println("\ncalc E:", 100);
-    E.TEST_ToString("E", 10);
-    //    std::cout << "lenth of Estr = " << strlen(Estr) << std::endl;
-
-    printf("\ncalc e begin:\n");
-
-    // 获取的是计算机启动后的时间间隔,得到的是CPU时间,精确到1/CLOCKS_PER_SEC秒。
-    clock_t clock_start = clock();
-
-    decimal e = decimal(1);
-
-    decimal t = decimal(1);
-    //        DEBUG_COUT((f/1).ToString(10));
-    //        DEBUG_COUT((f/2).ToString(10));
-    //        DEBUG_COUT((f/3).ToString(10));
-    int i;
-    for(i = 1; !t.eps(); ++i) {
-        // t *= decimal(i).ToReciprocal();
-        t /= i;
-        e += t;
-    }
-    int count = i;
-
-    decimal f = DecimalMath::factorial(count);
-    f = f.ToReciprocal();
-
-    decimal err = e - E;
-    std::string e_str = e.ToString();
-    std::string err_str = err.ToString();
-    std::string f_str = f.ToString(10);
-
-    clock_t clock_end = clock();
-    double total_time = (double)(clock_end - clock_start) / CLOCKS_PER_SEC;
-
-    std::cout << ("calc e:") << e_str.substr(0, 50) << std::endl;
-    //    std::cout << "err in calc e:(" << count << ") = " << f_str << std::endl;
-    std::cout << "1/factorial(" << count << ") = " << f_str << std::endl;
-    //    DEBUG_COUT(f.GetIndex());
-    err.println("err between E and e:", 10);
-
-    printf("\nTime Elapsed: %f second\n", total_time);
-    //    DEBUG_COUT(err.ToDouble());
-}
-
 /**
  * @brief calculate pi
  * Chudnovsky algorithm

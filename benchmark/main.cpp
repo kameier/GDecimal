@@ -1,17 +1,11 @@
-﻿#include "DecimalMathTest.h"
+#include "DecimalMathTest.h"
 //-v;-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread
-int IO_test();
-int Power_test();
 
 int main(int argc, char** argv)
 {
     printf("hello world\n");
     decimal a = decimal(27);
 
-    IO_test();
-    Power_test();
-
-    DecimalTest::e_calc();
     DecimalTest::MachinLike<decimal>(6);
     DecimalTest::chudnovsky<decimal>();
 
@@ -25,5 +19,6 @@ int main(int argc, char** argv)
     DEBUG_COUT(ilog2<9>::value);
     DEBUG_COUT(ilog2<101>::value);
     DEBUG_COUT(ilog2<128>::value);
+    std::cout << "tan15 * tan 75 = " << (DecimalMath::tan15() * DecimalMath::tan75()).ToString(50) << std::endl;
     return 0;
 }
