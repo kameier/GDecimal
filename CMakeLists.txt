@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.1.0)
+
+# Use newer policies if available, up to most recent tested version of CMake.
+if(${CMAKE_VERSION} VERSION_LESS 3.11)
+  cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+else()
+  cmake_policy(VERSION 3.11)
+endif()
+
+# Set the default CMAKE_BUILD_TYPE to Release.
+# This should be done before the project command since the latter can set
+set(CMAKE_BUILD_TYPE Release)
+
+project(GDecimal)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+add_definitions(-std=c++17)
+add_definitions(-Wall)
+add_definitions(-O2)
+
+set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
+
+# lib
+aux_source_directory(Decimal Decimal_SRCS)
+add_library(Decimal ${Decimal_SRCS})
+
+# benchmark
+aux_source_directory(benchmark benchmark_SRCS)
+add_executable(benchmark ${benchmark_SRCS})
+target_link_libraries(benchmark ${LINK_OPTIONS})
+
+# test
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+# include_directories(D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest/include)
+# link_directories(D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest/lib)
+# set(LINK_OPTIONS -static gtest_main gtest)
+
+aux_source_directory(test test_SRCS)
+add_executable(Decimal_test ${test_SRCS})
+target_link_libraries(Decimal_test ${LINK_OPTIONS} ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+
+# 启用测试
+enable_testing()
+
+# 测试程序是否成功运行
+add_test (test_run bin/Decimal_test)
+add_test (benchmark_run bin/benchmark)

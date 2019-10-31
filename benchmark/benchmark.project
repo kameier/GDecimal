@@ -8,8 +8,8 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <File Name="benchmark.cpp"/>
     <File Name="DecimalMathTest.h"/>
-    <File Name="main.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

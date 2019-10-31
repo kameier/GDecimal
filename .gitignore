@@ -6,6 +6,7 @@ cmake-build-Release/
 gradlew*
 local.properties
 build/
+bin/
 *.zip
 libDecimal/compile_flags.txt
 benchmark/compile_flags.txt
