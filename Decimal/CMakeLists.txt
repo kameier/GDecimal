@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 # Project name
-project(libDecimal)
+project(Decimal)
 
 # This setting is useful for providing JSON file used by CodeLite for code completion
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
@@ -21,14 +21,13 @@ set(CONFIGURATION_NAME "Release")
 
 # Top project
 # Define some variables
-set(PROJECT_libDecimal_PATH "${CMAKE_CURRENT_LIST_DIR}")
+set(PROJECT_Decimal_PATH "${CMAKE_CURRENT_LIST_DIR}")
 set(WORKSPACE_PATH "${CMAKE_CURRENT_LIST_DIR}/..")
 
 
 
 #{{{{ User Code 1
 # Place your code here
-set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 #}}}}
 
 include_directories(
@@ -72,10 +71,9 @@ endif(WIN32)
 
 #{{{{ User Code 2
 # Place your code here
-add_definitions(-std=c++17)
 #}}}}
 
-add_library(libDecimal ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
+add_library(Decimal ${RC_SRCS} ${CXX_SRCS} ${C_SRCS})
 
 
 
