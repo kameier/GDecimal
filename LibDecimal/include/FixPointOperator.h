@@ -1,13 +1,13 @@
 #ifndef FixPointOperator_H
 #define FixPointOperator_H
 
-namespace FixPointOperator {
+namespace FixPointOperator
+{
 /*
 左移函数
 {0,1,2,3,4} -> {1,2,3,4,0}
 */
-template <typename UINT_T, int MAX_LEN>
-inline void left_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t ls)
+template <typename UINT_T, int MAX_LEN> inline void left_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t ls)
 {
     if(ls >= MAX_LEN * (8 * sizeof(UINT_T))) {
         for(int i = 0; i < MAX_LEN; ++i) {
@@ -25,7 +25,9 @@ inline void left_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t ls)
         }
         ls = ls % (8 * sizeof(UINT_T));
     }
-    if(ls == 0) { return; }
+    if(ls == 0) {
+        return;
+    }
     UINT_T t = 0;
     for(int i = MAX_LEN - 1; i >= 0; i--) {
         UINT_T u = a[i];
@@ -38,8 +40,7 @@ inline void left_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t ls)
     右移函数
     {0,1,2,3,4} -> {0,0,1,2,3}
 */
-template <typename UINT_T, int MAX_LEN>
-inline void right_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t rs)
+template <typename UINT_T, int MAX_LEN> inline void right_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t rs)
 {
     UINT_T t = 0;
     if(rs >= MAX_LEN * (8 * sizeof(UINT_T))) {
@@ -56,7 +57,9 @@ inline void right_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t rs)
         a[i] = 0;
     }
     rs = rs % (8 * sizeof(UINT_T));
-    if(rs == 0) { return; }
+    if(rs == 0) {
+        return;
+    }
     for(int i = 0; i < MAX_LEN; ++i) {
         UINT_T u = a[i];
         a[i] = (u >> rs) + t;
@@ -69,8 +72,7 @@ inline void right_shift(FixPointData<UINT_T, MAX_LEN>& a, size_t rs)
     r = a % b
     返回 r
 */
-template <typename UINT_T, int MAX_LEN>
-inline UINT_T divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
+template <typename UINT_T, int MAX_LEN> inline UINT_T divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
 {
     UINT_T hi = 0;
     for(int i = 0; i < MAX_LEN; i++) {
@@ -79,8 +81,7 @@ inline UINT_T divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
     return hi;
 }
 
-template <typename UINT_T, int MAX_LEN>
-inline UINT_T shift_divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
+template <typename UINT_T, int MAX_LEN> inline UINT_T shift_divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
 {
     assert(b > a[0]);
     UINT_T hi = a[0];
@@ -95,8 +96,7 @@ inline UINT_T shift_divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
             a[i - 1] = _divided_base(hi, 0, bb);
             return hi;
         }
-    }
-    else if constexpr(std::is_same<UINT_T, UINT32>::value) {
+    } else if constexpr(std::is_same<UINT_T, UINT32>::value) {
         constexpr UINT_T _2e16 = UINT_T(1) << (16);
         if(b < _2e16) {
             UINT16 bb = b;
@@ -107,8 +107,7 @@ inline UINT_T shift_divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
             a[i - 1] = _divided_base(hi, 0, bb);
             return hi;
         }
-    }
-    else {
+    } else {
     }
     int i;
     for(i = 1; i < MAX_LEN; i++) {
@@ -118,8 +117,7 @@ inline UINT_T shift_divide_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
     return hi;
 }
 
-template <typename UINT_T, int MAX_LEN>
-inline char shift_divide_eq_By_10(FixPointData<UINT_T, MAX_LEN>& a)
+template <typename UINT_T, int MAX_LEN> inline char shift_divide_eq_By_10(FixPointData<UINT_T, MAX_LEN>& a)
 {
     constexpr char b = 10;
     constexpr UINT_T qq = (~UINT_T(0)) / b;
@@ -141,8 +139,7 @@ inline char shift_divide_eq_By_10(FixPointData<UINT_T, MAX_LEN>& a)
     return hi;
 }
 
-template <typename UINT_T, int MAX_LEN>
-inline char divide_eq_By_10(FixPointData<UINT_T, MAX_LEN>& a)
+template <typename UINT_T, int MAX_LEN> inline char divide_eq_By_10(FixPointData<UINT_T, MAX_LEN>& a)
 {
     constexpr char b = 10;
     constexpr UINT_T qq = (~UINT_T(0)) / b;
@@ -240,14 +237,13 @@ inline void multi_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T
                 d[ij] += _addcarry_base(0, p[ij], dst, p[ij]);
                 --ij;
                 d[ij] += _addcarry_base(0, p[ij], hi, p[ij]);
-            }
-            else {
+            } else {
                 _addcarry_base(0, p[ij], dst, p[ij]);
             }
         }
     }
-    UINT_T d_MAX_LEN = 0;  // d[MAX_LEN]
-    UINT_T p_MAX_LEN = 0;  // p[MAX_LEN]
+    UINT_T d_MAX_LEN = 0; // d[MAX_LEN]
+    UINT_T p_MAX_LEN = 0; // p[MAX_LEN]
     // i + j = count
     for(int i = 0; i < MAX_LEN; ++i) {
         dst = _mulx_base(a[i], b[MAX_LEN - i], hi);
@@ -255,7 +251,9 @@ inline void multi_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T
         d[idx_end] += _addcarry_base(0, p[idx_end], hi, p[idx_end]);
     }
     UINT8 carry = 0;
-    if(p_MAX_LEN >= (UINT_T(1) << (8 * sizeof(UINT_T) - 1))) { carry = 1; }
+    if(p_MAX_LEN >= (UINT_T(1) << (8 * sizeof(UINT_T) - 1))) {
+        carry = 1;
+    }
     carry = _addcarry_base(carry, p[idx_end], d_MAX_LEN, a[idx_end]);
     for(int n = idx_end - 1; n >= 0; --n) {
         carry = _addcarry_base(carry, p[n], d[n + 1], a[n]);
@@ -279,8 +277,7 @@ inline void multi_all_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UI
                 d[ij] += _addcarry_base(0, p[ij], dst, p[ij]);
                 --ij;
                 d[ij] += _addcarry_base(0, p[ij], hi, p[ij]);
-            }
-            else {
+            } else {
                 _addcarry_base(0, p[ij], dst, p[ij]);
             }
         }
@@ -299,8 +296,7 @@ inline void multi_all_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UI
     a = a * b
     返回 进位carry
 */
-template <typename UINT_T, int MAX_LEN>
-inline UINT_T multi_eq(FixPointData<UINT_T, MAX_LEN>& a, UINT_T b)
+template <typename UINT_T, int MAX_LEN> inline UINT_T multi_eq(FixPointData<UINT_T, MAX_LEN>& a, UINT_T b)
 {
     UINT_T carry = 0;
     for(int i = MAX_LEN - 1; i >= 0; i--) {
@@ -317,8 +313,12 @@ inline bool _compare(const FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<
 {
     assert(a.size() == b.size());
     for(int i = 0; i < MAX_LEN; ++i) {
-        if(a[i] > b[i]) { return 1; }
-        if(a[i] < b[i]) { return -1; }
+        if(a[i] > b[i]) {
+            return 1;
+        }
+        if(a[i] < b[i]) {
+            return -1;
+        }
     }
     return 0;
 }
@@ -328,9 +328,8 @@ inline bool _compare(const FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<
     返回是否溢出
 */
 template <typename UINT_T, int MAX_LEN>
-inline int minus(const FixPointData<UINT_T, MAX_LEN>& a,
-                 const FixPointData<UINT_T, MAX_LEN>& b,
-                 FixPointData<UINT_T, MAX_LEN>& c)
+inline int
+minus(const FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T, MAX_LEN>& b, FixPointData<UINT_T, MAX_LEN>& c)
 {
     //    assert(a.size() == b.size() && a.size() == c.size());
     // c = FixPointData<UINT_T, MAX_LEN>(a.size(), 0);
@@ -376,9 +375,8 @@ inline int minus_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T,
     返回是否溢出
 */
 template <typename UINT_T, int MAX_LEN>
-inline int add(const FixPointData<UINT_T, MAX_LEN>& a,
-               const FixPointData<UINT_T, MAX_LEN>& b,
-               FixPointData<UINT_T, MAX_LEN>& c)
+inline int
+add(const FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T, MAX_LEN>& b, FixPointData<UINT_T, MAX_LEN>& c)
 {
     //    assert(a.size() == b.size() && a.size() == c.size());
     UINT8 t1 = 0;
@@ -410,22 +408,23 @@ inline int add_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T, M
     a = a + b
     返回是否溢出
 */
-template <typename UINT_T, int MAX_LEN>
-inline UINT_T add_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
+template <typename UINT_T, int MAX_LEN> inline UINT_T add_eq(FixPointData<UINT_T, MAX_LEN>& a, const UINT_T b)
 {
     UINT_T t1 = b;
     for(size_t i = 0; i < MAX_LEN; ++i) {
         t1 = _addcarry_base(0, a[i], t1, a[i]);
-        if(t1 == 0) { break; }
+        if(t1 == 0) {
+            break;
+        }
     }
-    return t1;  //表示溢出
+    return t1; //表示溢出
 }
 
 template <typename UINT_T, int MAX_LEN>
 inline void KaratsubaMult_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointData<UINT_T, MAX_LEN>& b)
 {
     //    assert(MAX_LEN % 2 == 0);
-    UINT_T c[MAX_LEN * 2] = {0};
+    UINT_T c[MAX_LEN * 2] = { 0 };
     MultBase::Multiplication<UINT_T, MAX_LEN>(c, (UINT_T*)a.data(), (UINT_T*)b.data());
     //    MultBase::Multiplication<UINT_T, MAX_LEN>(c, (UINT_T*)a.Data, (UINT_T*)b.Data);
     //    UINT8 carry = (c[MAX_LEN + 1] >> (sizeof(UINT_T) * 8 - 1));
@@ -435,8 +434,7 @@ inline void KaratsubaMult_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPointDat
     memcpy((void*)(a.data()), (void*)(c + 1), MAX_LEN * sizeof(UINT_T));
 }
 
-template <typename T>
-inline void println(const T& a, const char* str)
+template <typename T> inline void println(const T& a, const char* str)
 {
     std::cout << std::endl << str;
     for(size_t i = 0; i < a.size(); ++i) {
@@ -445,29 +443,27 @@ inline void println(const T& a, const char* str)
     printf(" \n");
 }
 
-template <typename UINT_T, int MAX_LEN>
-inline int lzcnt(const FixPointData<UINT_T, MAX_LEN>& a)
+template <typename UINT_T, int MAX_LEN> inline int lzcnt(const FixPointData<UINT_T, MAX_LEN>& a)
 {
     return MultBase::lzcnt<UINT_T, MAX_LEN>(a.data());
 }
 
-template <typename UINT_T, int MAX_LEN>
-double ToDouble(const FixPointData<UINT_T, MAX_LEN>& a)
+template <typename UINT_T, int MAX_LEN> double ToDouble(const FixPointData<UINT_T, MAX_LEN>& a)
 {
     return a[0] + a[1] / pow(2.0, 8 * sizeof(UINT_T));
 }
 
-template <typename UINT_T, int MAX_LEN>
-inline int iszero(const FixPointData<UINT_T, MAX_LEN>& a)
+template <typename UINT_T, int MAX_LEN> inline int iszero(const FixPointData<UINT_T, MAX_LEN>& a)
 {
     for(size_t i = 0; i < MAX_LEN; ++i) {
-        if(a[i] != 0) { return 0; }
+        if(a[i] != 0) {
+            return 0;
+        }
     }
     return 1;
 }
 
-template <typename UINT_T, int MAX_LEN>
-int format(FixPointData<UINT_T, MAX_LEN>& a)
+template <typename UINT_T, int MAX_LEN> int format(FixPointData<UINT_T, MAX_LEN>& a)
 {
     int index = 0;
     if(a[0] != 0) {
@@ -475,10 +471,10 @@ int format(FixPointData<UINT_T, MAX_LEN>& a)
             index++;
             right_shift(a, 1);
         }
-    }
-    else {
-        if(iszero(a)) { index = 0; }
-        else {
+    } else {
+        if(iszero(a)) {
+            index = 0;
+        } else {
             while(a[0] == 0) {
                 index--;
                 left_shift(a, 1);
@@ -498,7 +494,9 @@ inline void FloatPoint_multi_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPoint
     assert(b_size <= b.size());
     assert(b_size <= a.size());
     int a_idx_end = MAX_LEN - 1;
-    if(b_size > MAX_LEN) { b_size = MAX_LEN; }
+    if(b_size > MAX_LEN) {
+        b_size = MAX_LEN;
+    }
     int b_idx_end = b_size - 1;
     FixPointData<UINT_T, MAX_LEN> p = FixPointData<UINT_T, MAX_LEN>(MAX_LEN);
     FixPointData<UINT_T, MAX_LEN> d = FixPointData<UINT_T, MAX_LEN>(MAX_LEN);
@@ -509,20 +507,19 @@ inline void FloatPoint_multi_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPoint
         bi = b[i];
         for(int j = a_idx_end - i; j >= 0; j--) {
             dst = _mulx_base(a[j], bi, hi);
-            int ij = i + j;  // 0 -> a_idx_end
+            int ij = i + j; // 0 -> a_idx_end
 
             if(ij > 0) {
                 d[ij] += _addcarry_base(0, p[ij], dst, p[ij]);
                 --ij;
                 d[ij] += _addcarry_base(0, p[ij], hi, p[ij]);
-            }
-            else {
+            } else {
                 _addcarry_base(0, p[ij], dst, p[ij]);
             }
         }
     }
-    UINT_T d_MAX_LEN = 0;  // d[MAX_LEN]
-    UINT_T p_MAX_LEN = 0;  // p[MAX_LEN]
+    UINT_T d_MAX_LEN = 0; // d[MAX_LEN]
+    UINT_T p_MAX_LEN = 0; // p[MAX_LEN]
     // i + j = MAX_LEN
     for(int i = 0; i < b_size; ++i) {
         dst = _mulx_base(a[MAX_LEN - i], b[i], hi);
@@ -530,11 +527,13 @@ inline void FloatPoint_multi_eq(FixPointData<UINT_T, MAX_LEN>& a, const FixPoint
         d[a_idx_end] += _addcarry_base(0, p[a_idx_end], hi, p[a_idx_end]);
     }
     UINT8 carry = 0;
-    if(p_MAX_LEN >= (UINT_T(1) << (8 * sizeof(UINT_T) - 1))) { carry = 1; }
+    if(p_MAX_LEN >= (UINT_T(1) << (8 * sizeof(UINT_T) - 1))) {
+        carry = 1;
+    }
     carry = _addcarry_base(carry, p[a_idx_end], d_MAX_LEN, a[a_idx_end]);
     for(int n = a_idx_end - 1; n >= 0; --n) {
         carry = _addcarry_base(carry, p[n], d[n + 1], a[n]);
     }
 }
-}  // namespace FixPointOperator
-#endif  // FixPointOperator_H
+} // namespace FixPointOperator
+#endif // FixPointOperator_H

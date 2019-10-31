@@ -1,10 +1,10 @@
 #ifndef FixPointReciprocal_H
 #define FixPointReciprocal_H
 
-namespace FixPointOperator {
+namespace FixPointOperator
+{
 
-template <typename UINT_T, int MAX_LEN>
-inline int DoWithDivZero(FixPointData<UINT_T, MAX_LEN>& A)
+template <typename UINT_T, int MAX_LEN> inline int DoWithDivZero(FixPointData<UINT_T, MAX_LEN>& A)
 {
     for(int i = 0; i < MAX_LEN; ++i) {
         A[i] = ~((UINT_T)0);
@@ -12,27 +12,28 @@ inline int DoWithDivZero(FixPointData<UINT_T, MAX_LEN>& A)
     return -1;
 }
 
-template <int MAX_LEN>
-inline UINT16 reciprocal_init_value(UINT16 a1, UINT16* A)
+template <int MAX_LEN> inline UINT16 reciprocal_init_value(UINT16 a1, UINT16* A)
 {
     memset((void*)A, 0, MAX_LEN * sizeof(UINT16));
     float t1 = pow(2.0, 16) / (1 + (a1 + 1) * pow(2.0, -16));
     A[1] = static_cast<UINT16>(t1);
-    if(A[1] == 0) { A[1] = UINT16(1) << 15; }
+    if(A[1] == 0) {
+        A[1] = UINT16(1) << 15;
+    }
     return A[1];
     //    A1 = 0xB100;
 }
-template <int MAX_LEN>
-inline UINT32 reciprocal_init_value(UINT32 a1, UINT32* A)
+template <int MAX_LEN> inline UINT32 reciprocal_init_value(UINT32 a1, UINT32* A)
 {
     memset((void*)(A), 0, MAX_LEN * sizeof(UINT32));
     double t1 = pow(2.0, 32) / (1 + (a1 + 1) * pow(2.0, -32));
     A[1] = (UINT32)(t1);
-    if(A[1] == 0) { A[1] = UINT32(1) << 31; }
+    if(A[1] == 0) {
+        A[1] = UINT32(1) << 31;
+    }
     return A[1];
 }
-template <int MAX_LEN>
-inline UINT64 reciprocal_init_value(UINT64 a1, UINT64* A)
+template <int MAX_LEN> inline UINT64 reciprocal_init_value(UINT64 a1, UINT64* A)
 {
     memset((void*)(A), 0, MAX_LEN * sizeof(UINT64));
     const int i = 16;
@@ -71,8 +72,7 @@ int FloatPointReciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UI
             //            DEBUG_COUT(lz_count - zerocount);
             FloatPoint_multi_eq(AA, A, a_size);
             add_eq(A, AA);
-        }
-        else  // if(AA[0] == 1)
+        } else // if(AA[0] == 1)
         {
             AA[0] = 0;
             lz_count = lzcnt(AA);
@@ -80,8 +80,12 @@ int FloatPointReciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UI
             FloatPoint_multi_eq(AA, A, a_size);
             minus_eq(A, AA);
         }
-        if(lz_count >= lz_count_limit) { break; }
-        if(a_size < MAX_LEN) { a_size *= 2; }
+        if(lz_count >= lz_count_limit) {
+            break;
+        }
+        if(a_size < MAX_LEN) {
+            a_size *= 2;
+        }
     }
     //    printf("FixPoint_reciprocal iter times is %d\n", n);
     return n;
@@ -118,8 +122,7 @@ int KaratsubaReciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UIN
             KaratsubaMult_eq<UINT_T, MAX_LEN>(AA, A);
             //            multi_eq<UINT_T, MAX_LEN>(AA, A);
             add_eq(A, AA);
-        }
-        else  // if(AA[0] == 1)
+        } else // if(AA[0] == 1)
         {
             AA[0] = 0;
             lz_count = lzcnt(AA);
@@ -129,7 +132,9 @@ int KaratsubaReciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UIN
         }
         //        println(A,"A");
         //        println(AA,"AA");
-        if(lz_count >= lz_count_limit) { break; }
+        if(lz_count >= lz_count_limit) {
+            break;
+        }
     }
     //    if(n > 9)
     //    {
@@ -141,10 +146,9 @@ int KaratsubaReciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UIN
     return n;
 }
 
-template <typename UINT_T, int MAX_LEN>
-int FloatPointReciprocal2(const UINT_T* a, UINT_T* A)
+template <typename UINT_T, int MAX_LEN> int FloatPointReciprocal2(const UINT_T* a, UINT_T* A)
 {
-    UINT_T B[MAX_LEN] = {0};
+    UINT_T B[MAX_LEN] = { 0 };
     MultBase::Reciprocal<UINT_T, MAX_LEN>(a, A);
     int n;
     int lz_count_limit = MAX_LEN * 8 * (int)sizeof(UINT_T) - 2;
@@ -160,15 +164,16 @@ int FloatPointReciprocal2(const UINT_T* a, UINT_T* A)
             lz_count = MultBase::lzcnt<UINT_T, MAX_LEN>(B);
             MultBase::Mult_eq<UINT_T, MAX_LEN>(B, A);
             MultBase::add_eq<UINT_T, MAX_LEN>(A, B);
-        }
-        else {
+        } else {
             B[0] = 0;
             lz_count = MultBase::lzcnt<UINT_T, MAX_LEN>(B);
             MultBase::Mult_eq<UINT_T, MAX_LEN>(B, A);
             MultBase::minus_eq<UINT_T, MAX_LEN>(A, B);
         }
         //        DEBUG_COUT(n);
-        if(lz_count >= lz_count_limit) { break; }
+        if(lz_count >= lz_count_limit) {
+            break;
+        }
     }
     //    DEBUG_COUT(n);
     return n;
@@ -203,15 +208,16 @@ int Base_Reciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UINT_T,
             lz_count = lzcnt(AA);
             multi_eq<UINT_T, MAX_LEN>(AA, A);
             add_eq(A, AA);
-        }
-        else  // if(AA[0] == 1)
+        } else // if(AA[0] == 1)
         {
             AA[0] = 0;
             lz_count = lzcnt(AA);
             multi_eq<UINT_T, MAX_LEN>(AA, A);
             minus_eq(A, AA);
         }
-        if(lz_count >= lz_count_limit) { break; }
+        if(lz_count >= lz_count_limit) {
+            break;
+        }
     }
     return n;
 }
@@ -325,5 +331,5 @@ int Base_Reciprocal(const FixPointData<UINT_T, MAX_LEN>& a, FixPointData<UINT_T,
 //    printf("FixPoint_reciprocal iter times is %d\n", n);
 //    return n;
 //}
-}  // namespace FixPointOperator
-#endif  // FixPointReciprocal_H
+} // namespace FixPointOperator
+#endif // FixPointReciprocal_H

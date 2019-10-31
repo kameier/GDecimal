@@ -61,38 +61,38 @@ template <typename T> typename std::enable_if_t<sizeof(typename T::UINT) >= size
     std::vector<int> cn;
     std::vector<decimal::UINT> an, bn;
     switch(num) {
-    case(1): {
-        cn = { 1 };
-        an = { 1 };
-        bn = { 1 };
-        break;
-    }
-    case(2): {
-        cn = { 4, -1 };
-        an = { 1, 1 };
-        bn = { 5, 239 };
-        break;
-    }
-    case(3): {
-        cn = { 44, 139, -12 };
-        an = { 74684, 1, 20138 };
-        bn = { 14967113, 239, 15351991 };
-        break;
-    }
-    case(4): {
-        cn = { 44, 7, -12, 24 };
-        an = { 1, 1, 1, 1 };
-        bn = { 57, 239, 682, 12943 };
-        break;
-    }
-    case(6): {
-        cn = { 183, 32, -68, 12, -12, -100 };
-        an = { 1, 1, 1, 1, 1, 1 };
-        bn = { 239, 1023, 5832, 110443, 4841182, 6826318 };
-        break;
-    }
-    default: {
-    }
+        case(1): {
+            cn = { 1 };
+            an = { 1 };
+            bn = { 1 };
+            break;
+        }
+        case(2): {
+            cn = { 4, -1 };
+            an = { 1, 1 };
+            bn = { 5, 239 };
+            break;
+        }
+        case(3): {
+            cn = { 44, 139, -12 };
+            an = { 74684, 1, 20138 };
+            bn = { 14967113, 239, 15351991 };
+            break;
+        }
+        case(4): {
+            cn = { 44, 7, -12, 24 };
+            an = { 1, 1, 1, 1 };
+            bn = { 57, 239, 682, 12943 };
+            break;
+        }
+        case(6): {
+            cn = { 183, 32, -68, 12, -12, -100 };
+            an = { 1, 1, 1, 1, 1, 1 };
+            bn = { 239, 1023, 5832, 110443, 4841182, 6826318 };
+            break;
+        }
+        default: {
+        }
     }
 
     clock_t clock_start = clock();

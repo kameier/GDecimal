@@ -1,7 +1,8 @@
 #ifndef DecimalMathConstant_H
 #define DecimalMathConstant_H
 
-namespace DecimalMath {
+namespace DecimalMath
+{
 static const decimal& PI()
 {
     //        static decimal pi = decimal("3.14159265358979323846264338327950288419716939937510");
@@ -71,6 +72,6 @@ static const decimal& ln10()
     );
     return _ln10;
 }
-}  // namespace DecimalMath
+} // namespace DecimalMath
 
 #endif

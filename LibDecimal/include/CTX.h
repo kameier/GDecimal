@@ -6,11 +6,12 @@
 #include <map>
 #include <vector>
 
-template <typename Decimal>
-class CTX_VECTOR {
-   private:
-    class Instance {
-       public:
+template <typename Decimal> class CTX_VECTOR
+{
+private:
+    class Instance
+    {
+    public:
         std::vector<Decimal> P;
         std::vector<Decimal> N;
     };
@@ -38,11 +39,13 @@ class CTX_VECTOR {
         return *V;
     }
 
-   public:
+public:
     static Decimal Power10(int index)
     {
         static auto V = Init();
-        if(index == 0) { return V.P[0]; }
+        if(index == 0) {
+            return V.P[0];
+        }
         if(index > 0) {
             if(index >= (int)V.P.size()) {
                 for(int i = V.P.size() - 1; i < index; ++i) {
@@ -51,8 +54,7 @@ class CTX_VECTOR {
                 }
             }
             return V.P[index];
-        }
-        else {
+        } else {
             index = -index;
             if(index >= (int)V.N.size()) {
                 for(int i = V.N.size() - 1; i < index; ++i) {
@@ -65,9 +67,9 @@ class CTX_VECTOR {
     }
 };
 
-template <typename Decimal>
-class CTX_MAP {
-   private:
+template <typename Decimal> class CTX_MAP
+{
+private:
     typedef std::map<int, Decimal> Instance;
     static Instance& Init()
     {
@@ -85,14 +87,16 @@ class CTX_MAP {
         return *pM;
     }
 
-   public:
+public:
     static Decimal Power10(int index)
     {
         static Instance M = Init();
         auto it = M.find(index);
-        if(it == M.end()) { M[index] = Decimal::power(10, index); }
+        if(it == M.end()) {
+            M[index] = Decimal::power(10, index);
+        }
         return M[index];
     }
 };
 
-#endif  // CTX_VECTOR_H
+#endif // CTX_VECTOR_H

@@ -1,8 +1,7 @@
 ﻿#ifndef DecimalConver_H
 #define DecimalConver_H
 
-template <typename UINT_T, size_t MAX_LEN>
-inline Decimal<UINT_T, MAX_LEN>& Decimal<UINT_T, MAX_LEN>::DivBy10()
+template <typename UINT_T, size_t MAX_LEN> inline Decimal<UINT_T, MAX_LEN>& Decimal<UINT_T, MAX_LEN>::DivBy10()
 {
     FixPointOperator::shift_divide_eq_By_10<UINT_T, MAX_LEN>(this->mData);
     this->mIndex = this->mIndex - UINT_BIT_SIZE;
@@ -10,16 +9,15 @@ inline Decimal<UINT_T, MAX_LEN>& Decimal<UINT_T, MAX_LEN>::DivBy10()
     return *this;
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-int Decimal<UINT_T, MAX_LEN>::FormString(const char* nstr)
+template <typename UINT_T, size_t MAX_LEN> int Decimal<UINT_T, MAX_LEN>::FormString(const char* nstr)
 {
     int sgn = 0;
-    if(nstr[0] == '+') { nstr++; }
-    else if(nstr[0] == '-') {
+    if(nstr[0] == '+') {
+        nstr++;
+    } else if(nstr[0] == '-') {
         sgn = 1;
         nstr++;
-    }
-    else {
+    } else {
         sgn = 0;
     }
     int point_found = -1;
@@ -30,13 +28,16 @@ int Decimal<UINT_T, MAX_LEN>::FormString(const char* nstr)
 
     for(int i = 0; nstr[i] != '\0'; ++i) {
         char ch = nstr[i];
-        if(ch == ' ') { continue; }
+        if(ch == ' ') {
+            continue;
+        }
         if(ch == '.') {
             point_found = i;
             continue;
         }
-        if(point_found == -1) { str1.push_back(ch); }
-        else {
+        if(point_found == -1) {
+            str1.push_back(ch);
+        } else {
             str2.push_back(ch);
         }
     }
@@ -49,12 +50,15 @@ int Decimal<UINT_T, MAX_LEN>::FormString(const char* nstr)
         char num = str1[i] - '0';
         (*this) *= 10;
         //        this->multi_eq_by(10);
-        if(num != 0) { (*this) += Decimal<UINT_T, MAX_LEN>(num); }
+        if(num != 0) {
+            (*this) += Decimal<UINT_T, MAX_LEN>(num);
+        }
     }
     //        DEBUG_COUT(this->ToDouble());
     if(point_found != -1) {
-        if(str1.length() >= Decimal<UINT_T, MAX_LEN>::MAX_DIGITS_LEN) { str2 = str2.substr(0, 1); }
-        else {
+        if(str1.length() >= Decimal<UINT_T, MAX_LEN>::MAX_DIGITS_LEN) {
+            str2 = str2.substr(0, 1);
+        } else {
             if(Decimal<UINT_T, MAX_LEN>::MAX_DIGITS_LEN - str1.length() + 1 < str2.length()) {
                 str2 = str2.substr(0, Decimal<UINT_T, MAX_LEN>::MAX_DIGITS_LEN - str1.length() + 1);
             }
@@ -82,43 +86,57 @@ int Decimal<UINT_T, MAX_LEN>::FormString(const char* nstr)
 }
 
 // SFC: significant_figure_count
-template <typename UINT_T, size_t MAX_LEN>
-std::string Decimal<UINT_T, MAX_LEN>::ToString(size_t SFC) const
+template <typename UINT_T, size_t MAX_LEN> std::string Decimal<UINT_T, MAX_LEN>::ToString(size_t SFC) const
 {
-    if(this->mIndex < 0)  // Fraction Part
+    if(this->mIndex < 0) // Fraction Part
     {
         std::string B = this->FractionalPartString(-1, SFC);
         //        DEBUG_COUT(B);
         if(B[0] != '0') {
             B = "0." + B;
-            if(this->mSgn == 1) { B.insert(0, 1, '-'); }
+            if(this->mSgn == 1) {
+                B.insert(0, 1, '-');
+            }
             return B;
         }
-        if(B.size() == 1 && B[0] == '0') { return B; }
+        if(B.size() == 1 && B[0] == '0') {
+            return B;
+        }
         int index = -1;
         while(B.front() == '0') {
             B.erase(B.begin());
             index--;
         }
         //        DEBUG_COUT(B);
-        if(B.empty()) { return "0"; }
-        else {
+        if(B.empty()) {
+            return "0";
+        } else {
             while(B.length() > SFC) {
                 B.pop_back();
             }
             //            DEBUG_COUT(B);
-            if(B.length() > 1) { B.insert(1, 1, '.'); }
-            if(index != -1) { B = B + "E" + std::to_string(index); }
-            if(this->mSgn == 1) { B.insert(0, 1, '-'); }
+            if(B.length() > 1) {
+                B.insert(1, 1, '.');
+            }
+            if(index != -1) {
+                B = B + "E" + std::to_string(index);
+            }
+            if(this->mSgn == 1) {
+                B.insert(0, 1, '-');
+            }
             return B;
         }
     }
     if(this->mIndex == 0) {
-        if(this->isZero()) { return "0"; }
+        if(this->isZero()) {
+            return "0";
+        }
     }
     std::string A = this->IntegerPartString();
     if(SFC <= A.length()) {
-        if(this->mSgn == 1) { A = "-" + A; }
+        if(this->mSgn == 1) {
+            A = "-" + A;
+        }
         return A;
     }
 
@@ -127,15 +145,15 @@ std::string Decimal<UINT_T, MAX_LEN>::ToString(size_t SFC) const
     //    DEBUG_COUT(A);
     std::string C;
     C.reserve(MAX_DIGITS_LEN);
-    if(B.length() == 1 && B[0] == '0')  // B = 0
+    if(B.length() == 1 && B[0] == '0') // B = 0
     {
-        if(this->mSgn == 1) { C = "-" + A; }
-        else {
+        if(this->mSgn == 1) {
+            C = "-" + A;
+        } else {
             C = A;
         }
         return C;
-    }
-    else  // C = A + B
+    } else // C = A + B
     {
         C = A + "." + B;
     }
@@ -151,10 +169,14 @@ std::string Decimal<UINT_T, MAX_LEN>::ToString(size_t SFC) const
         //            C.pop_back();
         //        }
         //        std::cout << "LINE" << __LINE__ << ":" << C << std::endl;
-        if(C.back() == '.') { C.pop_back(); }
+        if(C.back() == '.') {
+            C.pop_back();
+        }
         //        std::cout << "LINE" << __LINE__ << ":"<< C << std::endl;
     }
-    if(this->mSgn == 1) { C = "-" + C; }
+    if(this->mSgn == 1) {
+        C = "-" + C;
+    }
     return C;
 }
 
@@ -183,7 +205,9 @@ std::string Decimal<UINT_T, MAX_LEN>::ToString(size_t SFC) const
 template <typename UINT_T, size_t MAX_LEN>
 std::string Decimal<UINT_T, MAX_LEN>::FractionalPartString(int lenth, int SFC) const
 {
-    if(lenth <= 0) { lenth = 0x7FFFFFF; }
+    if(lenth <= 0) {
+        lenth = 0x7FFFFFF;
+    }
     Decimal<UINT_T, MAX_LEN> b = Decimal<UINT_T, MAX_LEN>::abs(*this).GetFraction();
     //    DEBUG_COUT(b.mData[0]);
     //    DEBUG_COUT(b.mData[1]);
@@ -192,8 +216,9 @@ std::string Decimal<UINT_T, MAX_LEN>::FractionalPartString(int lenth, int SFC) c
     B.reserve(MAX_DIGITS_LEN);
 
     int idx;
-    if constexpr(std::is_same<UINT_T, UINT16>::value) { idx = 2; }
-    else {
+    if constexpr(std::is_same<UINT_T, UINT16>::value) {
+        idx = 2;
+    } else {
         idx = 4;
     }
     int max_iter = (lenth / idx + 1) * idx;
@@ -209,19 +234,25 @@ std::string Decimal<UINT_T, MAX_LEN>::FractionalPartString(int lenth, int SFC) c
 
         char tt[8];
         unsigned int tmp = (unsigned int)b.ToUINT();
-        if constexpr(std::is_same<UINT_T, UINT16>::value) { sprintf_s(tt, "%02u", tmp); }
-        else {
+        if constexpr(std::is_same<UINT_T, UINT16>::value) {
+            sprintf_s(tt, "%02u", tmp);
+        } else {
             sprintf_s(tt, "%04u", tmp);
         }
         B = B + tt;
         b = b.GetFraction();
 
-        if(tmp == 0) { SF_flag = (SF_count > 0); }
-        else {
+        if(tmp == 0) {
+            SF_flag = (SF_count > 0);
+        } else {
             SF_flag = 1;
         }
-        if(SF_flag) { SF_count += idx; }
-        if(SF_count > SFC) { break; }
+        if(SF_flag) {
+            SF_count += idx;
+        }
+        if(SF_count > SFC) {
+            break;
+        }
 
         //        DEBUG_COUT(SF_flag);
         //        DEBUG_COUT(SF_count);
@@ -231,18 +262,18 @@ std::string Decimal<UINT_T, MAX_LEN>::FractionalPartString(int lenth, int SFC) c
     if(B.empty()) {
         B = "0";
         return B;
-    }
-    else {
+    } else {
         while(!B.empty() && B.back() == '0') {
             B.pop_back();
         }
     }
-    if(B.empty()) { B = "0"; }
+    if(B.empty()) {
+        B = "0";
+    }
     return B;
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-std::string Decimal<UINT_T, MAX_LEN>::IntegerPartString() const
+template <typename UINT_T, size_t MAX_LEN> std::string Decimal<UINT_T, MAX_LEN>::IntegerPartString() const
 {
     assert(this->mIndex >= 0);
     std::string A;
@@ -253,10 +284,13 @@ std::string Decimal<UINT_T, MAX_LEN>::IntegerPartString() const
         //        char c = '0' + (char)FixPointOperator::divide_eq<UINT_T, MAX_LEN>(Intpart, 10);
         char c = '0' + FixPointOperator::divide_eq_By_10<UINT_T, MAX_LEN>(Intpart);
         A.push_back(c);
-        if(FixPointOperator::lzcnt(Intpart) >= Data_BIT_SIZE) { break; }
+        if(FixPointOperator::lzcnt(Intpart) >= Data_BIT_SIZE) {
+            break;
+        }
     }
-    if(A.empty()) { A = "0"; }
-    else {
+    if(A.empty()) {
+        A = "0";
+    } else {
         std::reverse(A.begin(), A.end());
     }
     //        DEBUG_COUT(A);
@@ -280,19 +314,17 @@ std::string Decimal<UINT_T, MAX_LEN>::IntegerPartString() const
     return A;
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::floor() const
+template <typename UINT_T, size_t MAX_LEN> Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::floor() const
 {
     Decimal<UINT_T, MAX_LEN> A = Decimal<UINT_T, MAX_LEN>(0);
-    if(this->mIndex < 0) { return A; }
-    else if(this->mIndex == 0) {
+    if(this->mIndex < 0) {
+        return A;
+    } else if(this->mIndex == 0) {
         A.mData[0] = this->mData[0];
         return A;
-    }
-    else if(this->mIndex >= int((MAX_LEN - 1) * UINT_BIT_SIZE)) {
+    } else if(this->mIndex >= int((MAX_LEN - 1) * UINT_BIT_SIZE)) {
         return *this;
-    }
-    else {
+    } else {
         size_t count = (mIndex + 0) / UINT_BIT_SIZE + 1;
         short left = mIndex % UINT_BIT_SIZE;
         for(size_t i = 0; i < count; ++i) {
@@ -310,8 +342,7 @@ Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::floor() const
     }
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::round() const
+template <typename UINT_T, size_t MAX_LEN> Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::round() const
 {
     if(this->mSgn == 1) {
         Decimal<UINT_T, MAX_LEN> a = abs(*this);
@@ -320,12 +351,12 @@ Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::round() const
         return a;
     }
     Decimal<UINT_T, MAX_LEN> A = Decimal<UINT_T, MAX_LEN>(0);
-    if(this->mIndex < -1) { return A; }
-    else if(this->mIndex == -1) {
+    if(this->mIndex < -1) {
+        return A;
+    } else if(this->mIndex == -1) {
         A.mData[0] = this->mData[0];
         return A;
-    }
-    else {
+    } else {
         A.mData[0] = 1;
         A.mIndex = -1;
         A += *this;
@@ -333,17 +364,16 @@ Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::round() const
     }
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::GetFraction() const
+template <typename UINT_T, size_t MAX_LEN> Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::GetFraction() const
 {
-    if(this->mIndex < 0) { return *this; }
-    else if(this->mIndex == 0) {
+    if(this->mIndex < 0) {
+        return *this;
+    } else if(this->mIndex == 0) {
         Decimal<UINT_T, MAX_LEN> A = Decimal<UINT_T, MAX_LEN>(*this);
         A.mData[0] = 0;
         A.Format();
         return A;
-    }
-    else {
+    } else {
         Decimal<UINT_T, MAX_LEN> A = Decimal<UINT_T, MAX_LEN>(*this);
         // mIndex = 0 => 32bit
         // mIndex = 1 => 33bit
@@ -364,45 +394,45 @@ Decimal<UINT_T, MAX_LEN> Decimal<UINT_T, MAX_LEN>::GetFraction() const
     }
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-UINT_T Decimal<UINT_T, MAX_LEN>::ToUINT() const
+template <typename UINT_T, size_t MAX_LEN> UINT_T Decimal<UINT_T, MAX_LEN>::ToUINT() const
 {
     //    if(this->mIndex >= UINT_BIT_SIZE) {
     //        std::cout << "L358:"<<this->mIndex << std::endl;
     //    }
     assert(this->mIndex < UINT_BIT_SIZE);
-    if(this->mIndex < 0) { return 0; }
-    else if(this->mIndex == 0) {
+    if(this->mIndex < 0) {
+        return 0;
+    } else if(this->mIndex == 0) {
         UINT_T t = this->mData[0];
         return t;
-    }
-    else if(this->mIndex < UINT_BIT_SIZE) {
+    } else if(this->mIndex < UINT_BIT_SIZE) {
         int rs = this->mIndex;
         UINT_T t = this->mData[0];
         t = (t << rs) + ((this->mData[1]) >> (UINT_BIT_SIZE - rs));
         return t;
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
-template <typename UINT_T, size_t MAX_LEN>
-Decimal<UINT_T, MAX_LEN>::operator double() const
+template <typename UINT_T, size_t MAX_LEN> Decimal<UINT_T, MAX_LEN>::operator double() const
 {
     if constexpr(MAX_LEN == 2 || std::is_same<UINT_T, UINT64>::value) {
         double t = mData[0] + (mData[1]) * std::pow(2.0, -UINT_BIT_SIZE);
         t *= std::pow(2.0, mIndex);
-        if(mSgn) { t = -t; }
+        if(mSgn) {
+            t = -t;
+        }
         return t;
-    }
-    else {
+    } else {
         double t =
             mData[0] + (mData[1]) * std::pow(2.0, -UINT_BIT_SIZE) + (mData[2]) * std::pow(2.0, -UINT_BIT_SIZE * 2);
         t *= std::pow(2.0, mIndex);
-        if(mSgn) { t = -t; }
+        if(mSgn) {
+            t = -t;
+        }
         return t;
     }
 }
 
-#endif  // DecimalConver_H
+#endif // DecimalConver_H

@@ -3,15 +3,15 @@
 
 #include <assert.h>
 
-#include <basetsd.h>
-#include <immintrin.h>
-#include <stdio.h>
-#include <string.h>
 #include <algorithm>
+#include <basetsd.h>
 #include <cmath>
+#include <immintrin.h>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <stdio.h>
+#include <string.h>
 
 #include <vector>
 
@@ -46,7 +46,6 @@ typedef unsigned __int128 UINT128;
  * @param sum_out
  * @return c_out 溢出
  */
-
 inline UINT8 _addcarry_base(const UINT8 c_in, const UINT16 src1, const UINT16 src2, UINT16& sum_out)
 {
     UINT32 sum = c_in;
@@ -132,8 +131,7 @@ inline UINT8 _subborrow_base(const UINT8 c_in, const UINT64 src1, const UINT64 s
  * @param sum_out
  * @return c_out 溢出
  */
-template <typename T>
-inline bool _addeq_carry_base(const T src1, T& sum_out)
+template <typename T> inline bool _addeq_carry_base(const T src1, T& sum_out)
 {
     sum_out += src1;
     return (sum_out < src1);
@@ -235,20 +233,15 @@ inline UINT64 _mulx_base(const UINT64 a, const UINT64 b, UINT64& hi)
 //__attribute__((target("lzcnt"))) inline UINT16 lzcnt_base(UINT16 a) { return __lzcnt16(a); }
 //__attribute__((target("lzcnt"))) inline UINT32 lzcnt_base(UINT32 a) { return _lzcnt_u32(a); }
 //__attribute__((target("lzcnt"))) inline UINT64 lzcnt_base(UINT64 a) { return _lzcnt_u64(a); }
-template <typename T>
-inline T lzcnt_base(T t)
+template <typename T> inline T lzcnt_base(T t)
 {
     T cnt = 0;
     const int L = 8;
-    for(int i = 8 * (int)sizeof(T) - L; i >= 0; i -= L)
-    {
+    for(int i = 8 * (int)sizeof(T) - L; i >= 0; i -= L) {
         UINT8 ch = (t >> i);
-        if(ch == 0)
-        {
+        if(ch == 0) {
             cnt += L;
-        }
-        else
-        {
+        } else {
             cnt += lzcnt_base(ch);
             return cnt;
         }
@@ -267,82 +260,67 @@ inline T lzcnt_base(T t)
 //    }
 //    return 0;
 //}
-template <>
-inline UINT8 lzcnt_base(UINT8 x)
+template <> inline UINT8 lzcnt_base(UINT8 x)
 {
     UINT8 n = 0;
     // 1111 0000
-    if((x & 0xF0) == 0)
-    {
+    if((x & 0xF0) == 0) {
         n += 4;
         x <<= 4;
     }
     // 1100 0000
-    if((x & 0xC0) == 0)
-    {
+    if((x & 0xC0) == 0) {
         n += 2;
         x <<= 2;
     }
     // 1000 0000
-    if((x & 0x80) == 0)
-    {
+    if((x & 0x80) == 0) {
         n += 1;
     }
     return n;
 }
 
-template <>
-inline UINT16 lzcnt_base(UINT16 x)
+template <> inline UINT16 lzcnt_base(UINT16 x)
 {
     UINT16 n = 0;
-    if((x & 0xFF00) == 0)
-    {
+    if((x & 0xFF00) == 0) {
         n += 8;
         x <<= 8;
     }
-    if((x & 0xF000) == 0)
-    {
+    if((x & 0xF000) == 0) {
         n += 4;
         x <<= 4;
     }
-    if((x & 0xC000) == 0)
-    {
+    if((x & 0xC000) == 0) {
         n += 2;
         x <<= 2;
     }
-    if((x & 0x8000) == 0)
-    {
+    if((x & 0x8000) == 0) {
         n += 1;
     }
     return n;
 }
 
-template <>
-inline UINT32 lzcnt_base(UINT32 x)
+template <> inline UINT32 lzcnt_base(UINT32 x)
 {
     UINT32 n = 0;
-    if((x & 0xFFFF0000) == 0)
-    {
+    if((x & 0xFFFF0000) == 0) {
         n += 16;
         x <<= 16;
     }
-    if((x & 0xFF000000) == 0)
-    {
+    if((x & 0xFF000000) == 0) {
         n += 8;
         x <<= 8;
     }
-    if((x & 0xF0000000) == 0)
-    {
+    if((x & 0xF0000000) == 0) {
         n += 4;
         x <<= 4;
     }
-    if((x & 0xC0000000) == 0)
-    {
+    if((x & 0xC0000000) == 0) {
         n += 2;
         x <<= 2;
     }
-    if((x & 0x80000000) == 0)
-    {
+    if((x & 0x80000000) == 0) {
         n += 1;
     }
     return n;
@@ -356,19 +334,15 @@ inline UINT32 lzcnt_base(UINT32 x)
 /*code specific to clang compiler*/
 #elif __GNUC__
 /*code for GNU C compiler */
-template <>
-inline UINT64 lzcnt_base(UINT64 x)
+template <> inline UINT64 lzcnt_base(UINT64 x)
 {
 #ifdef __LZCNT__
     return _lzcnt_u64(x);
 #else
     // #warning "lzcnt instruction is not enabled."
-    if(x == 0)
-    {
+    if(x == 0) {
         return (64);
-    }
-    else
-    {
+    } else {
         UINT64 res;
         __asm__("bsrq %1, %0" : "=r"(res) : "r"(x));
         return (63 - res);
@@ -378,18 +352,14 @@ inline UINT64 lzcnt_base(UINT64 x)
 #elif _MSC_VER
 /*usually has the version number in _MSC_VER*/
 /*code specific to MSVC compiler*/
-template <>
-inline UINT64 lzcnt_base(UINT64 x)
+template <> inline UINT64 lzcnt_base(UINT64 x)
 {
     UINT64 n = 0;
     UINT64 _2e32 = 0x100000000U;
-    if(x < _2e32)
-    {
+    if(x < _2e32) {
         UINT32 xx = x;
         n = 32 + lzcnt_base(xx);
-    }
-    else
-    {
+    } else {
         UINT32 xx = x >> 32;
         n = lzcnt_base(xx);
     }
@@ -401,18 +371,15 @@ inline UINT64 lzcnt_base(UINT64 x)
 /*code specific to mingw compilers*/
 #endif
 
-template <typename T>
-inline T nzcnt_base(T t)
+template <typename T> inline T nzcnt_base(T t)
 {
     return 8 * sizeof(T) - lzcnt_base(t);
 }
 
-template <typename T>
-inline T bitscan_base(T t)
+template <typename T> inline T bitscan_base(T t)
 {
     T i;
-    for(i = 0; t; i++)
-    {
+    for(i = 0; t; i++) {
         t &= (t - 1);
     }
     return i;
@@ -436,12 +403,9 @@ inline uint64_t tzcnt(uint64_t n)
 #ifdef __POPCNT__
     return (popcnt(~n & (n - 1)));
 #else
-    if(n == 0)
-    {
+    if(n == 0) {
         return (64);
-    }
-    else
-    {
+    } else {
         UINT64 res;
         __asm__("bsfq %1, %0" : "=r"(res) : "r"(n));
         return (res);
@@ -508,8 +472,7 @@ inline UINT64 _divided_base(UINT64& hi, UINT64 lo, UINT64 a)
     // r = hi * rr + lo % a;
     UINT64 q = 0;
     UINT64 hhi = hi;
-    while(hhi > 0)
-    {
+    while(hhi > 0) {
         UINT64 q0 = qq * hhi;
         q += q0;
         UINT64 res_hi, res_lo;
@@ -548,21 +511,48 @@ inline UINT64 _divided_base(UINT64& hi, UINT64 lo, UINT32 a)
     return q + r / a;
 }
 
-inline void SetN1(unsigned short* pBuf, int n) { (*pBuf) |= 1 << n; }
+inline void SetN1(unsigned short* pBuf, int n)
+{
+    (*pBuf) |= 1 << n;
+}
 
-inline void SetN0(unsigned short* pBuf, int n) { (*pBuf) &= ~(1 << n); }
+inline void SetN0(unsigned short* pBuf, int n)
+{
+    (*pBuf) &= ~(1 << n);
+}
 
-inline void SetN1(unsigned char* pBuf, int n) { (*pBuf) |= 1 << n; }
+inline void SetN1(unsigned char* pBuf, int n)
+{
+    (*pBuf) |= 1 << n;
+}
 
-inline void SetN0(unsigned char* pBuf, int n) { (*pBuf) &= ~(1 << n); }
+inline void SetN0(unsigned char* pBuf, int n)
+{
+    (*pBuf) &= ~(1 << n);
+}
 
-inline int Get1Bit(unsigned char buf, int n) { return (buf >> n) & 0x01; }
+inline int Get1Bit(unsigned char buf, int n)
+{
+    return (buf >> n) & 0x01;
+}
 
-inline int Get1Bit(unsigned short buf, int n) { return (buf >> n) & 0x01; }
+inline int Get1Bit(unsigned short buf, int n)
+{
+    return (buf >> n) & 0x01;
+}
 
-inline int Get2Bit(unsigned char buf, int n) { return (buf >> n) & 0x03; }
+inline int Get2Bit(unsigned char buf, int n)
+{
+    return (buf >> n) & 0x03;
+}
 
-inline int Get2Bit(unsigned short buf, int n) { return (buf >> n) & 0x03; }
+inline int Get2Bit(unsigned short buf, int n)
+{
+    return (buf >> n) & 0x03;
+}
 
-inline void Set2Bit(unsigned short* pBuf, int n, int m) { (*pBuf) |= m << n; }
-#endif  // BASE_H
+inline void Set2Bit(unsigned short* pBuf, int n, int m)
+{
+    (*pBuf) |= m << n;
+}
+#endif // BASE_H
