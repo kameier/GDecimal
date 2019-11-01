@@ -1,17 +1,18 @@
-#include "DecimalMathTest.h"
+#include "DecimalBenchmarkTest.h"
 //-v;-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread
+using namespace DecimalBenchmarkTest;
 
 int main(int argc, char** argv)
 {
     printf("hello world\n");
     decimal a = DecimalMath::__ln2();
 
-    DecimalTest::MachinLike<decimal>(6);
-    DecimalTest::chudnovsky<decimal>();
+    ::MachinLike<decimal>(6);
+    ::chudnovsky<decimal>();
 
-    DecimalTest::TrigonometricFunctionsTest();
-    DecimalTest::InverseTrigonometricFunctionsTest();
-    DecimalTest::ExpFunctionsTest();
+    ::TrigonometricFunctionsTest();
+    ::InverseTrigonometricFunctionsTest();
+    ::ExpFunctionsTest();
     (DecimalMath::cbrt(a) - decimal(3)).println("cbrt(27) = 3 + ", 10);
 
     //    DEBUG_COUT(sizeof(int));

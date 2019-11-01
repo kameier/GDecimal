@@ -39,6 +39,10 @@ GDecimal是采用C++开发的大数计算程序
 
 ## benchmark文件夹说明
 * DecimalMathTest.h     数值计算测试,实现圆周率pi的计算
+    * Chudnovsky algorithm 
+        $${\frac{1}{\pi}}=12\sum_{k=0}^{\infty}{\frac{(-1)^{k}(6k)!(545140134k+13591409)}{(3k)!(k!)^{3}\left(640320\right)^{3k+3/2}}}$$
+    * Machin-like formula
+        $${\frac{\pi}{4}}=\sum _{{n=0}}^{N-1}c_{n}\arctan {\frac  {a_{n}}{b_{n}}}$$
 * benchmark.cpp         性能测试
 
 ## Source文件夹说明

@@ -1,9 +1,9 @@
-#ifndef DecimalMathTest_H
-#define DecimalMathTest_H
+#ifndef DecimalBenchmarkTest_H
+#define DecimalBenchmarkTest_H
 
 #include "../include/pch.h"
 
-namespace DecimalTest
+namespace DecimalBenchmarkTest
 {
 /**
  * @brief calculate pi
@@ -210,6 +210,6 @@ void ExpFunctionsTest()
     printf("\nTime Elapsed: %f second\n", total_time);
 }
 
-} // namespace DecimalTest
+} // namespace DecimalBenchmarkTest_H
 
 #endif
