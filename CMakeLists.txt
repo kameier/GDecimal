@@ -7,11 +7,11 @@ else()
   cmake_policy(VERSION 3.11)
 endif()
 
+project(GDecimal)
+
 # Set the default CMAKE_BUILD_TYPE to Release.
 # This should be done before the project command since the latter can set
 set(CMAKE_BUILD_TYPE Release)
-
-project(GDecimal)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

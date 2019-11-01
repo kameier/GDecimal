@@ -1,6 +1,6 @@
 # GDecimal
 GDecimal是采用C++开发的大数计算程序  
-开发环境：codelite + mingw-w64 + cmake
+开发环境：mingw-w64 + cmake
 
 ## 文件说明
 * Base.h 实现基础运算，比如带进位的加法_addcarry_u32
