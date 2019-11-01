@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-# Use newer policies if available, up to most recent tested version of CMake.
-if(${CMAKE_VERSION} VERSION_LESS 3.11)
-  cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-else()
-  cmake_policy(VERSION 3.11)
-endif()
-
 project(GDecimal)
 
 # Set the default CMAKE_BUILD_TYPE to Release.
@@ -18,12 +11,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_definitions(-std=c++17)
 add_definitions(-Wall)
 add_definitions(-O2)
+add_definitions(-s)
 
 if (MINGW)
-  set(LINK_OPTIONS -s -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
+  set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 endif ()
 if (Clang)
-  set(LINK_OPTIONS -s -static -pthread)
+  set(LINK_OPTIONS -static -pthread)
 endif ()
 
 # lib
@@ -40,8 +34,6 @@ set(GTEST_ROOT D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-# include_directories(D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest/include)
-# link_directories(D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest/lib)
 # set(LINK_OPTIONS -static gtest_main gtest)
 
 aux_source_directory(test test_SRCS)

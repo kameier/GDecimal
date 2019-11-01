@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-class TestMap : public testing::Test
+class TestCase : public testing::Test
 {
 public:
     // Add log
@@ -28,7 +28,7 @@ public:
     }
 };
 
-TEST_F(TestMap, Power)
+TEST_F(TestCase, Power)
 {
     char str[1000];
     int index = 3;
@@ -47,7 +47,7 @@ TEST_F(TestMap, Power)
     }
 }
 
-TEST_F(TestMap, StringIO)
+TEST_F(TestCase, StringIO)
 {
     std::string a_in = "33220.027832016345435425216";
     decimal a = decimal(a_in.c_str());
@@ -76,7 +76,7 @@ TEST_F(TestMap, StringIO)
     ASSERT_TRUE(f_err.eps(10));
 }
 
-TEST_F(TestMap, MathConstant)
+TEST_F(TestCase, MathConstant)
 {
     decimal l2 = DecimalMath::__ln2();
     std::string l2_text = {
@@ -106,7 +106,7 @@ TEST_F(TestMap, MathConstant)
     ASSERT_TRUE(E_err.eps(15));
 }
 
-TEST_F(TestMap, Reciprocal)
+TEST_F(TestCase, Reciprocal)
 {
     decimal n = decimal(0);
     decimal one = decimal(1);
@@ -121,7 +121,7 @@ TEST_F(TestMap, Reciprocal)
     }
 }
 
-TEST_F(TestMap, e_calc)
+TEST_F(TestCase, e_calc)
 {
     decimal E = DecimalMath::E();
     // 获取的是计算机启动后的时间间隔,得到的是CPU时间,精确到1/CLOCKS_PER_SEC秒。
