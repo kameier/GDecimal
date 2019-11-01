@@ -1,7 +1,7 @@
 #ifndef DecimalMathTest_H
 #define DecimalMathTest_H
 
-#include "../Decimal/include/pch.h"
+#include "../include/pch.h"
 
 namespace DecimalTest
 {

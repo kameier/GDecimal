@@ -19,7 +19,12 @@ add_definitions(-std=c++17)
 add_definitions(-Wall)
 add_definitions(-O2)
 
-set(LINK_OPTIONS -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
+if (MINGW)
+  set(LINK_OPTIONS -s -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
+endif ()
+if (Clang)
+  set(LINK_OPTIONS -s -static -pthread)
+endif ()
 
 # lib
 aux_source_directory(Decimal Decimal_SRCS)
@@ -31,6 +36,7 @@ add_executable(benchmark ${benchmark_SRCS})
 target_link_libraries(benchmark ${LINK_OPTIONS})
 
 # test
+set(GTEST_ROOT D:/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/googletest)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 

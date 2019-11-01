@@ -4,7 +4,7 @@
 int main(int argc, char** argv)
 {
     printf("hello world\n");
-    decimal a = decimal(27);
+    decimal a = DecimalMath::__ln2();
 
     DecimalTest::MachinLike<decimal>(6);
     DecimalTest::chudnovsky<decimal>();
