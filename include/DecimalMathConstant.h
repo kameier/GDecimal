@@ -7,7 +7,7 @@ static const decimal& PI()
 {
     //        static decimal pi = decimal("3.14159265358979323846264338327950288419716939937510");
     static decimal pi = decimal(
-#include "../source/100000_digits_of_pi.txt"
+#include "../resources/100000_digits_of_pi.txt"
     );
     return pi;
 }
@@ -15,7 +15,7 @@ static const decimal& PI()
 static const decimal& E()
 {
     static decimal e = decimal(
-#include "../source/100000_digits_of_e.txt"
+#include "../resources/100000_digits_of_e.txt"
     );
     return e;
 }
@@ -40,7 +40,7 @@ static decimal __ln2()
 static const decimal& ln2()
 {
     static decimal _ln2 = decimal(
-#include "../source/20000_digits_of_ln2.txt"
+#include "../resources/20000_digits_of_ln2.txt"
     );
     return _ln2;
 }
@@ -48,7 +48,7 @@ static const decimal& ln2()
 static const decimal& sqrt3()
 {
     static decimal s3 = decimal(
-#include "../source/20000_digits_of_sqrt3.txt"
+#include "../resources/20000_digits_of_sqrt3.txt"
     );
     return s3;
 }
@@ -68,7 +68,7 @@ static const decimal& tan75()
 static const decimal& ln10()
 {
     static decimal _ln10 = decimal(
-#include "../source/20000_digits_of_ln10.txt"
+#include "../resources/20000_digits_of_ln10.txt"
     );
     return _ln10;
 }

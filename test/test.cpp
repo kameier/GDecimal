@@ -80,7 +80,7 @@ TEST_F(TestCase, MathConstant)
 {
     decimal l2 = DecimalMath::__ln2();
     std::string l2_text = {
-#include "../source/20000_digits_of_ln2.txt"
+#include "../resources/20000_digits_of_ln2.txt"
     };
     std::string l2_out = l2.ToString(60);
     ASSERT_TRUE(strncmp(l2_text.c_str(), l2_out.c_str(), l2_out.length()) == 0);
@@ -97,7 +97,7 @@ TEST_F(TestCase, MathConstant)
     decimal E = DecimalMath::E();
     std::string E_out = E.ToString(100);
     std::string E_text = {
-#include "../source/100000_digits_of_e.txt"
+#include "../resources/100000_digits_of_e.txt"
     };
     ASSERT_TRUE(strncmp(E_text.c_str(), E_out.c_str(), E_out.length()) == 0);
 
